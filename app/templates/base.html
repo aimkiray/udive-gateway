@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>(●—●)</title>
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/vnd.microsoft.icon"/>
+    <link rel="icon" href="../static/favicon.ico" type="image/vnd.microsoft.icon"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.minty.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">推销女装</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('surface.index') }}">Index </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('surface.new') }}">New </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Library </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                {% if current_user.is_anonymous %}
+                    <a class="nav-link" href="{{ url_for('surface.login') }}">Login </a>
+                {% else %}
+                    <a class="nav-link" href="{{ url_for('surface.logout') }}">Logout </a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    {% block content %}{% endblock %}
+</main>
+
+{% with messages = get_flashed_messages() %}
+
+    {% if messages %}
+        <div class="custom-alert alert alert-info">
+            <ul>
+                {% for message in messages %}
+                    {{ message }}<br>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+{% endwith %}
+
+<div class="custom-alert alert alert-warning" id="custom_warning_alert" style="display: none;">
+
+</div>
+
+<div class="custom-alert alert alert-primary" id="custom_primary_alert" style="display: none;">
+
+</div>
+
+<div class="custom-alert alert alert-info" id="custom_info_alert" style="display: none;">
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../static/js/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../static/js/jquery.min.js"><\/script>')</script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+<script src="../static/js/bs-custom-file-input.min.js"></script>
+<script src="../static/js/bootbox.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+    })
+</script>
+
+{% block js %}{% endblock %}
+
+</body>
+</html>

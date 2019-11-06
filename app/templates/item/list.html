@@ -1,0 +1,193 @@
+<hr>
+<div class="form-row">
+    <div class="form-group col-sm-12">
+        <label for="item_order_list">Item list</label>
+        <table id="item_order_list" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="check_all_item"></th>
+                <th>Order ID</th>
+                <th>Order title</th>
+                <th>
+                    <select name="item_order_state_all" id="item_order_state_all">
+                        <option value="all">Item State - change all</option>
+                        {% for state in item_state %}
+                        <option value="{{ state }}">{{ state }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <select name="request_state_all" id="request_state_all">
+                        <option value="">Request Status - change all</option>
+                        {% for status in request_status %}
+                        <option value="{{ status }}">{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in item_list %}
+            <tr>
+                <td><input type="checkbox" name="check_item_id" value="{{ item.item_order_id }}"></td>
+                <td>{{ item.item_order_id }}</td>
+                <td>{{ item.item_order_title }}</td>
+                <td>
+                    <select name="item_order_state">
+                        {% for state in item_state %}
+                        <option value="{{ state }}_{{ item.item_order_id }}" {% if state== item.item_order_state
+                                %}selected{% endif %}>{{ state }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="request_status">
+                        {% for status in request_status %}
+                        <option value="{{ status }}_{{ item.request_id }}" {% if status== item.status %}selected{% endif
+                                %}>{{ status }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <input type="hidden" value="{{ item.status }}_{{ item.request_id }}" name="raw_request_status">
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-sm-12">
+        <button class="btn btn-primary" id="select_all">Select All</button>
+        <button class="btn btn-primary" id="start_change" disabled>Change</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var check_all_item = $("#check_all_item");
+
+        check_all_item.change(function () {
+            var checked = $(this).prop("checked");
+
+            $("input[name='check_item_id']").prop("checked", checked);
+        });
+
+        var request_state_all = $("#request_state_all");
+        request_state_all.unbind('change').on("change", function () {
+            var selected = $(this).find("option:selected").prop("selected");
+            $("select[name='request_status'] option[value^='" + request_state_all.val() + "']").prop("selected", selected);
+        });
+
+        var item_order_state_all = $("#item_order_state_all");
+        item_order_state_all.unbind('change').on("change", function () {
+            var selected = $(this).find("option:selected").prop("selected");
+            $("select[name='item_order_state']").find("option[value^='" + item_order_state_all.val() + "']").prop("selected", selected);
+        });
+
+        $("#start_change").click(function () {
+            var select_id_list = [];
+            $("input[name='check_item_id']:checked").each(function () {
+                select_id_list.push($(this).val())
+            });
+            var item_state_dict = {};
+            $("select[name='item_order_state']").find("option:selected").each(function () {
+                var item_state_list = $(this).val().split('_');
+
+                if (select_id_list.indexOf(item_state_list[1]) !== -1) {
+                    item_state_dict[item_state_list[1]] = item_state_list[0]
+                }
+            });
+
+            var request_status_dict = {};
+            $("select[name='request_status']").find("option:selected").each(function () {
+                var raw_request_status_dict = [];
+
+                $("input[name='raw_request_status']").each(function () {
+                    var raw_request_status_list = $(this).val().split('_');
+                    raw_request_status_dict[raw_request_status_list[1]] = raw_request_status_list[0]
+                });
+
+                var request_status_list = $(this).val().split('_');
+
+                /*if (select_id_list.indexOf(request_status_list[1]) !== -1) {
+                    request_status_dict[request_status_list[1]] = request_status_list[0]
+                }*/
+                for (var i = 0; i < select_id_list.length; i++) {
+                    if (select_id_list[i].split('-')[0] === request_status_list[1] && raw_request_status_dict[request_status_list[1]] !== request_status_list[0]) {
+                        request_status_dict[request_status_list[1]] = request_status_list[0];
+                        break
+                    }
+                }
+            });
+
+            bootbox.confirm({
+                title: "Make sure to modify?",
+                message: 'Request -> ' + JSON.stringify(request_status_dict) + '<br/>' + 'Item Order -> ' + JSON.stringify(item_state_dict),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        confirm_change()
+                    }
+                }
+            });
+
+            function confirm_change() {
+                var custom_primary_alert = $("#custom_primary_alert");
+                var message = 'Executing...';
+                custom_primary_alert.empty().show().text(message);
+                var user_dict = {};
+                user_dict['username'] = $("#inputUserName").val();
+                user_dict['password'] = $("#inputPassword").val();
+
+                var data = {
+                    'item_dict': item_state_dict,
+                    'request_dict': request_status_dict,
+                    'user_dict': user_dict
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/change/item',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#custom_primary_alert").fadeOut(0);
+                        $("#custom_warning_alert").fadeOut(0);
+                        var message = '';
+                        if (data.result === 'success') {
+                            message = 'Execution succeed! Please re-search to confirm whether to modify.';
+                            $("#custom_primary_alert").empty().show().text(message).delay(5000).fadeOut(300);
+                        } else {
+                            $("#error_list").html('<div class="form-row">\n' +
+                                '            <div class="form-group col-sm-12">\n' +
+                                'Error ID: ' + data.data +
+                                '            </div>\n' +
+                                '        </div>').show();
+                            message = 'Execution failed! Please try again or contact the administrator.';
+                            $("#custom_warning_alert").empty().show().text(message).delay(5000).fadeOut(300);
+                        }
+                    },
+                    error: function (xhr, type) {
+                        var message = 'Connection failed! Please try again or contact the administrator.';
+                        $("#custom_warning_alert").empty().show().text(message).delay(5000).fadeOut(300);
+                    }
+                });
+            }
+
+        });
+
+    });
+
+    $.getScript('../../static/js/item.js', function () {
+    });
+</script>

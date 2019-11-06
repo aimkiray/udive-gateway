@@ -1,37 +1,43 @@
-from opencv.motion_detection import single_motion_detector
-from imutils.video import VideoStream
-from flask import Response
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/6/4
+# @Author  : aimkiray
+
+import os
 from flask import Flask
-from flask import render_template
+from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+# from flask_wtf.csrf import CSRFProtect
+
+from app.opencv.motion_detection import SingleMotionDetector
+from imutils.video import VideoStream
 import threading
-import argparse
 import datetime
 import imutils
 import time
 import cv2
 
+bootstrap = Bootstrap()
+db = SQLAlchemy()
+migrate = Migrate()
+login = LoginManager()
+photos = UploadSet('photos', IMAGES)
+# csrf = CSRFProtect()
+
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
 # are viewing the stream)
-from opencv.motion_detection import SingleMotionDetector
-
 outputFrame = None
 lock = threading.Lock()
-
-# initialize a flask object
-app = Flask(__name__)
 
 # initialize the video stream and allow the camera sensor to
 # warmup
 # vs = VideoStream(usePiCamera=1).start()
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
-
-
-@app.route("/")
-def index():
-    # return the rendered template
-    return render_template("index.html")
 
 
 def detect_motion(frameCount):
@@ -49,7 +55,7 @@ def detect_motion(frameCount):
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
         frame = vs.read()
-        frame = imutils.resize(frame, width=400)
+        frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
@@ -110,34 +116,35 @@ def generate():
                bytearray(encodedImage) + b'\r\n')
 
 
-@app.route("/video_feed")
-def video_feed():
-    # return the response generated along with the specific media
-    # type (mime type)
-    return Response(generate(),
-                    mimetype="multipart/x-mixed-replace; boundary=frame")
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object('app.config.ProdConfig')
 
+    bootstrap.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login.init_app(app)
+    login.login_view = 'surface.login'
+    # file
+    configure_uploads(app, photos)
+    patch_request_class(app, app.config['MAX_CONTENT_LENGTH'])  # set maximum file size, default is 16MB
 
-if __name__ == '__main__':
-    # construct the argument parser and parse command line arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--ip", type=str, required=True,
-                    help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=True,
-                    help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("-f", "--frame-count", type=int, default=32,
-                    help="# of frames used to construct the background model")
-    args = vars(ap.parse_args())
+    # csrf.init_app(app)
 
-    # start a thread that will perform motion detection
-    t = threading.Thread(target=detect_motion, args=(
-        args["frame_count"],))
-    t.daemon = True
-    t.start()
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
-    # start the flask app
-    app.run(host=args["ip"], port=args["port"], debug=True,
-            threaded=True, use_reloader=False)
+    # item route
+    from app import routes
+    app.register_blueprint(routes.bp)
+
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+
+    return app
+
 
 # release the video stream pointer
 vs.stop()

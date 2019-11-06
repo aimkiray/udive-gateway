@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>(●—●)喔哟，崩溃啦！</title>
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/vnd.microsoft.icon"/>
+    <link rel="icon" href="../static/favicon.ico" type="image/vnd.microsoft.icon"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.minty.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">疯狂宇宙之究极无敌女装收集器</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Library <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        {#        <ul class="navbar-nav mr-auto">#}
+        {#            <li class="nav-item">#}
+        {#                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>#}
+        {#            </li>#}
+        {#        </ul>#}
+        {#        <ul class="navbar-nav mr-auto">#}
+        {#            <li class="nav-item">#}
+        {#                <a class="nav-link" href="#">Library <span class="sr-only">(current)</span></a>#}
+        {#            </li>#}
+        {#        </ul>#}
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="form-row">
+        <div class="form-group col-sm-6">
+            <label for="select_course">種族</label>
+            <select class="form-control" id="select_course">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="input_remark">性格</label>
+            <input type="text" class="form-control" id="input_remark" placeholder="可爱的蓝孩子">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-12">
+            <label for="topic_format">服饰</label>
+            <textarea class="form-control" id="topic_format" rows="3"
+                      placeholder="少小离家老大回，安能辨我是雌雄~"></textarea>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-12">
+            <label for="answer_format">要素</label>
+            <textarea class="form-control" id="answer_format" rows="3"
+                      placeholder="老夫聊发少年狂，左青龙，右白虎~"></textarea>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-12">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="related_pic">
+                <label class="custom-file-label" for="related_pic">Choose file</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-12">
+            <button class="btn btn-primary" id="start_format">Format</button>
+            <button class="btn btn-primary" id="start_search">Save</button>
+        </div>
+    </div>
+
+    <div id="answer_list">
+
+    </div>
+
+    <div id="error_list" style="display: none;">
+
+    </div>
+
+</main>
+<div class="custom-alert alert alert-warning" id="custom_warning_alert" style="display: none;">
+
+</div>
+
+<div class="custom-alert alert alert-primary" id="custom_primary_alert" style="display: none;">
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../static/js/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../static/js/jquery.min.js"><\/script>')</script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+<script src="../static/js/bootbox.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#start_format').click(function () {
+            {#format_text()#}
+        });
+
+        $("#start_search").click(function () {
+            $("#error_list").hide();
+            {#format_text();#}
+
+            var course = $("#select_course");
+
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                url: '/uploads/' + course,
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+            }).fail(function (res) {
+            });
+
+            var item_container = $("#answer_list");
+
+            // Load chrysanthemum, simulate loading effect
+            {#item_container.html('<div class="showbox">\n' +#}
+            {#    '  <div class="loader">\n' +#}
+            {#    '    <svg class="circular" viewBox="25 25 50 50">\n' +#}
+            {#    '      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>\n' +#}
+            {#    '    </svg>\n' +#}
+            {#    '  </div>\n' +#}
+            {#    '</div>');#}
+
+            var topic_value = $("#topic_format").val().replace(/[\s\r\n]/g, "");
+            var answer_value = $("#answer_format").val().replace(/[\s\r\n]/g, "");
+
+            var table_url = "/request";
+
+            // Load the table
+            item_container.load(table_url + "?topic=" + topic_value + "" +);
+
+        });
+
+        function format_text() {
+            var inputValue = $("#answer_format").val();
+            var valueList = {};
+
+            if (inputValue.indexOf(",") !== -1) {
+                return false
+            } else if (inputValue.indexOf("-") !== -1) {
+                var regex_item = /\d{5,10}-\d{1,4}/g;
+                valueList = inputValue.match(regex_item)
+            } else {
+                var regex_request = /\d{5,10}/g;
+                valueList = inputValue.match(regex_request)
+            }
+
+            var valueStr = '';
+
+            for (var key = 0; key < valueList.length; key++) {
+                var rawIdsString = valueList[key];
+                valueStr += rawIdsString + ','
+            }
+            var correctVal = valueStr.slice(0, -1);
+            $("#answer_format").val(correctVal)
+        }
+
+    })
+</script>
+</body>
+</html>
