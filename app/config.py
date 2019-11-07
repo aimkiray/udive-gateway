@@ -29,5 +29,5 @@ class DevConfig(Config):
 class ProdConfig(Config):
     SECRET_KEY = '12138'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:awsl12138@127.0.0.1/umr'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
     UPLOADED_PHOTOS_DEST = r'C:\Users\Administrator\Desktop\Project\umr\app\static\uploads'

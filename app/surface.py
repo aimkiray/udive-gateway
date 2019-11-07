@@ -7,7 +7,7 @@ from app.forms import LoginForm, RegistrationForm, UploadForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
-from app import db, photos, generate
+from app import db, photos
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify, json, Response
@@ -58,10 +58,10 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('您已经过凉宫ハルヒ认可，成为SOS团团员与外星人，未来人，和超能力者一起玩。')
+        flash('您已经过鹳狸猿认可。')
         return redirect(url_for('surface.login'))
     else:
-        flash('您没有经过凉宫ハルヒ认可，不能成为SOS团团员与外星人，未来人，和超能力者一起玩。')
+        flash('您还没有经过鹳狸猿认可，不能一起玩。')
     return render_template('register.html', title='Register', form=form)
 
 
@@ -81,16 +81,3 @@ def uploads():
         return jsonify({'result': 'success', 'file_url': photos.url(filename), 'file_name': filename})
     else:
         return jsonify({'result': 'false'})
-
-
-@bp.route('/video')
-def video():
-    return render_template('video.html')
-
-
-@bp.route("/video_feed")
-def video_feed():
-    # return the response generated along with the specific media
-    # type (mime type)
-    return Response(generate(),
-                    mimetype="multipart/x-mixed-replace; boundary=frame")

@@ -1,24 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if current_user.is_anonymous %}
-        <h1>Hi, 您还没有登录！！</h1>
-    {% else %}
-        <h1>Hi, 烧酒~</h1>
-    {% endif %}
-
     <div>
         <div style="display: table-cell;vertical-align: top; color:#B2B7F2;font-size:36px;font-family:'Times New Roman',serif;font-weight:bold;text-align:left;padding:10px 10px;line-height:100%">
             “
         </div>
         <div style="display: table-cell;text-align: left; padding: 1em; vertical-align: middle;">
-            通宵一时爽，一直通宵一直爽
+            {% if current_user.is_anonymous %}
+                <b style="font-size: larger;color: black;"><span style="color:red;">／人◕ ‿‿ ◕人＼</span>和我签订契约，成为马猴烧酒吧！</b>
+            {% else %}
+                <b style="font-size: larger;color: black;">遵从召唤而来, 你他娘的就是老子的Master吗？</b>
+            {% endif %}
         </div>
         <div style="display: table-cell; vertical-align: bottom; color:#B2B7F2;font-size:36px;font-family:'Times New Roman',serif;font-weight:bold;text-align:left;padding:10px 10px;line-height:100%">
             ”
         </div>
     </div>
     <div style="font-size: smaller; text-align: right; padding-right: 4%;">
-        <cite style="font-style:normal;">（我到仙界了没.jpg</cite>
+        <cite style="font-style:normal;">（by鲁迅</cite>
     </div>
 {% endblock %}

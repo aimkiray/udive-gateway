@@ -2,13 +2,16 @@
 {% from 'bootstrap/form.html' import render_form %}
 
 {% block content %}
-    <h1>Sign Up</h1>
-    {{ render_form(form) }}
-    <p>
-        <span style="color:red;">( ◕ ‿‿ ◕ )</span>
-        <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
-        <span style="color:red;">( ◕ ‿‿ ◕ )</span>
-        <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
-        <span style="color:red;">( ◕ ‿‿ ◕ )</span>
-    </p>
+    <div style="width: 400px; height: 400px; margin: auto;">
+        <h1>Sign Up</h1>
+        {{ render_form(form) }}
+        <p></p>
+        <p>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+        </p>
+    </div>
 {% endblock %}
