@@ -3,9 +3,7 @@
 # @Time    : 2019/11/6
 # @Author  : aimkiray
 
-from app import db
-from app import opencv
-
+from app.opencv import generate
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify, json, Response
 )
@@ -22,5 +20,5 @@ def video():
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
-    return Response(opencv.generate(),
+    return Response(generate(),
                     mimetype="multipart/x-mixed-replace; boundary=frame")
