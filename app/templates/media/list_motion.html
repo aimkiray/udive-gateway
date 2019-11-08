@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="width: 600px; height: 450px; margin: auto;">
+        <h1></h1>
+        {{ pagination.info }}
+        {{ pagination.links }}
+        {% for motion in motions %}
+            <span>{{ loop.index + pagination.skip }}</span><br/>
+            <img src="{{ motion.related_path }}"><br/>
+            <span>{{ motion.related_path }}</span><br/>
+        {% endfor %}
+        {{ pagination.links }}
+        <p>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:blue;">( ◕ ‿‿ ◕ )</span>
+            <span style="color:red;">( ◕ ‿‿ ◕ )</span>
+        </p>
+    </div>
+{% endblock %}

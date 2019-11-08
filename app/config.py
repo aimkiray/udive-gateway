@@ -17,7 +17,8 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     COURSE = 'gc,xh,cy,dl,cg,mn,sz'
-    UPLOADED_PHOTOS_DEST = r'C:\Users\savant\Dropbox\Projects\Python\umr\app\static\uploads'
+    UPLOADED_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/uploads'
+    MOTION_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/motion'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
 
 
@@ -30,4 +31,5 @@ class ProdConfig(Config):
     SECRET_KEY = '12138'
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
-    UPLOADED_PHOTOS_DEST = r'C:\Users\Administrator\Desktop\Project\umr\app\static\uploads'
+    UPLOADED_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/uploads'
+    MOTION_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/motion'

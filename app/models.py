@@ -1,6 +1,7 @@
 from app import db
 from flask_login import UserMixin
 from app import login
+from datetime import datetime
 
 
 @login.user_loader
@@ -43,3 +44,24 @@ class Gate(db.Model):
     is_deleted = db.Column(db.Integer)
     frequency = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class Media(db.Model):
+    __tablename__ = 'media'
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    gmt_create = db.Column(db.DateTime)
+    gmt_modified = db.Column(db.DateTime)
+    related_path = db.Column(db.String(255))
+
+    def __init__(self, related_path, gmt_create=None, gmt_modified=None):
+        self.related_path = related_path
+        if gmt_create is None:
+            gmt_create = datetime.utcnow()
+        self.gmt_create = gmt_create
+        if gmt_modified is None:
+            gmt_modified = datetime.utcnow()
+        self.gmt_modified = gmt_modified
+
+    def __repr__(self):
+        return '<Media %r>' % self.title

@@ -185,3 +185,15 @@ body {
 .bootbox .modal-header {
     display: block;
 }
+
+/*video*/
+.heimu, .heimu a, a .heimu, .heimu a.new {
+    background-color: #252525;
+    color: #252525;
+    text-shadow: none;
+}
+
+body:not(.heimu_toggle_on) .heimu:hover, body:not(.heimu_toggle_on) .heimu:active, body:not(.heimu_toggle_on) .heimu.off {
+    transition: color .13s linear;
+    color: #fff;
+}

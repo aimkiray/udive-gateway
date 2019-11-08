@@ -12,6 +12,7 @@ flask-sqlacodegen
 Flask-SQLAlchemy
 Flask-Uploads
 Flask-WTF
+flask-paginate
 inflect
 itsdangerous
 Jinja2

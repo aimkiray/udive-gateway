@@ -23,11 +23,15 @@ lock = threading.Lock()
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
+# motionFlag = False
+motionCount = 0
+img_path = None
+
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock
+    global vs, outputFrame, lock, img_path, motionCount
 
     # initialize the motion detector and the total number of frames
     # read thus far
@@ -39,6 +43,7 @@ def detect_motion(frameCount):
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
         frame = vs.read()
+        image = frame
         frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -58,6 +63,15 @@ def detect_motion(frameCount):
 
             # check to see if motion was found in the frame
             if motion is not None:
+                motionCount += 1
+                if motionCount > 999:
+                    img_path = '/home/aimkiray/PycharmProjects/iot-server/app/static/motion/' + \
+                                timestamp.strftime("%A %d %B %Y %I:%M:%S%p") + \
+                                '.jpg'
+                    cv2.imwrite(img_path, image)
+                    # motionFlag = True
+                    motionCount = 0
+
                 # unpack the tuple and draw the box surrounding the
                 # "motion area" on the output frame
                 (thresh, (minX, minY, maxX, maxY)) = motion
@@ -98,3 +112,13 @@ def generate():
         # yield the output frame in the byte format
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
                bytearray(encodedImage) + b'\r\n')
+
+
+def get_path():
+    global img_path
+    return img_path
+
+
+def reset_path():
+    global img_path
+    img_path = None

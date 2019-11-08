@@ -33,7 +33,6 @@ def create_app():
     # file
     configure_uploads(app, photos)
     patch_request_class(app, app.config['MAX_CONTENT_LENGTH'])  # set maximum file size, default is 16MB
-
     # csrf.init_app(app)
 
     try:
@@ -45,8 +44,8 @@ def create_app():
     from app import surface
     app.register_blueprint(surface.bp)
 
-    from app import video
-    app.register_blueprint(video.bp)
+    from app import media
+    app.register_blueprint(media.bp)
 
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')

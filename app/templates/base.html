@@ -30,10 +30,13 @@
                 <a class="nav-link" href="{{ url_for('surface.index') }}">Index </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('surface.new') }}">New </a>
+                <a class="nav-link" href="{{ url_for('surface.new') }}">Photo </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Library </a>
+                <a class="nav-link" href="{{ url_for('media.video') }}">Now </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('media.list_motion') }}">Motion </a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -90,7 +93,23 @@
 
 <script>
     $(document).ready(function () {
+        var getting = {
+            url: '{{ url_for('media.motion_detection') }}',
+            type: 'GET',
+            success: function (data) {
+                if (data === "True") {
+                    $("#custom_warning_alert").empty().show().html('<a href="/video">检测到UFO，点击查看</a>')
+                        .delay(5000).fadeOut(300);
+                }
+            },
+            error: function (xhr, type) {
+                $("#custom_primary_alert").empty().show().text('Connection failed!').delay(5000).fadeOut(300);
+            }
+        };
 
+        window.setInterval(function () {
+            $.ajax(getting)
+        }, 5000);
     })
 </script>
 
