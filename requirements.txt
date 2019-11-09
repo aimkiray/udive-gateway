@@ -27,3 +27,4 @@ SQLAlchemy
 tornado
 Werkzeug
 WTForms
+pyserial

@@ -98,7 +98,7 @@
             type: 'GET',
             success: function (data) {
                 if (data === "True") {
-                    $("#custom_warning_alert").empty().show().html('<a href="/video">检测到UFO，点击查看</a>')
+                    $("#custom_warning_alert").empty().show().html('<a href="{{ url_for('media.list_motion') }}">发现UFO，点击查看</a>')
                         .delay(5000).fadeOut(300);
                 }
             },

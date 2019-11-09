@@ -8,7 +8,7 @@
         {% for motion in motions %}
             <span>{{ loop.index + pagination.skip }}</span><br/>
             <img src="{{ motion.related_path }}"><br/>
-            <span>{{ motion.related_path }}</span><br/>
+            <span>{{ motion.gmt_modified }}</span><br/>
         {% endfor %}
         {{ pagination.links }}
         <p>
