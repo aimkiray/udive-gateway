@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
@@ -48,6 +49,27 @@ class Gate(db.Model):
     is_deleted = db.Column(db.Integer)
     frequency = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class Camera(db.Model):
+    __tablename__ = 'camera'
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    gmt_create = db.Column(db.DateTime)
+    gmt_modified = db.Column(db.DateTime)
+    related_path = db.Column(db.String(255))
+
+    def __init__(self, related_path, gmt_create=None, gmt_modified=None):
+        self.related_path = related_path
+        if gmt_create is None:
+            gmt_create = datetime.utcnow()
+        self.gmt_create = gmt_create
+        if gmt_modified is None:
+            gmt_modified = datetime.utcnow()
+        self.gmt_modified = gmt_modified
+
+    def __repr__(self):
+        return '<Camera %r>' % self.title
 
 
 if __name__ == '__main__':

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block styles %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+
+            $("input", this).click(function () {
+                var isChecked = $(this).prop('checked');
+                $.ajax({
+                    url: '{{ url_for('sensor.handle_send') }}',
+                    type: 'GET',
+                    data: {'node': $(this).prop('name')},
+                    success: function (data) {
+                        if (data === "True") {}
+                    },
+                    error: function (xhr, type) {
+                        $("#custom_primary_alert").empty().show().text('Connection failed!').delay(5000).fadeOut(300);
+                        // Restore checkbox status
+                        $(this).prop('checked', !isChecked);
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="lampSwitch" name="lamp">
+        <label class="custom-control-label" for="lampSwitch">灯的开关</label>
+    </div>
+    <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="fanSwitch" name="fan">
+        <label class="custom-control-label" for="fanSwitch">空调的开关</label>
+    </div>
+{% endblock %}

@@ -46,8 +46,8 @@ class Gate(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
-class Media(db.Model):
-    __tablename__ = 'media'
+class Camera(db.Model):
+    __tablename__ = 'camera'
 
     id = db.Column(db.BigInteger, primary_key=True)
     gmt_create = db.Column(db.DateTime)
@@ -64,4 +64,4 @@ class Media(db.Model):
         self.gmt_modified = gmt_modified
 
     def __repr__(self):
-        return '<Media %r>' % self.title
+        return '<Camera %r>' % self.title

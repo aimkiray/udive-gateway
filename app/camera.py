@@ -4,7 +4,7 @@
 # @Author  : aimkiray
 
 from app import db
-from app.models import Media
+from app.models import Camera
 from app.opencv import generate, get_path, reset_path
 
 from flask_paginate import Pagination, get_page_parameter
@@ -13,13 +13,13 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify, json, Response
 )
 
-bp = Blueprint('media', __name__)
+bp = Blueprint('camera', __name__)
 
 
 @bp.route('/video')
 @login_required
 def video():
-    return render_template('media/video.html')
+    return render_template('camera/video.html')
 
 
 @bp.route("/video_feed")
@@ -37,7 +37,7 @@ def motion_detection():
     path = get_path()
     if path is not None:
         path = path.split('app')[1]
-        db.session.add(Media(path))
+        db.session.add(Camera(path))
         db.session.commit()
         reset_path()
         return "True"
@@ -61,9 +61,9 @@ def list_motion():
 
     page = request.args.get(get_page_parameter(), type=int, default=1)
 
-    motions = Media.query.all()
+    motions = Camera.query.all()
     pagination = Pagination(page=page, total=len(motions), search=search, record_name='motions')
-    return render_template("media/list_motion.html", motions=motions, pagination=pagination)
+    return render_template("camera/list_motion.html", motions=motions, pagination=pagination)
 
 
 @bp.route("/del_motion/<int:id>", methods=['DELETE'])

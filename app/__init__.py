@@ -11,13 +11,16 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 # from flask_wtf.csrf import CSRFProtect
-
+from app.serial import Serial
+from flask_socketio import SocketIO
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 photos = UploadSet('photos', IMAGES)
+ser = Serial()
+socketio = SocketIO()
 # csrf = CSRFProtect()
 
 
@@ -29,6 +32,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
+    ser.init_app(app)
+    socketio.init_app(app)
     login.login_view = 'surface.login'
     # file
     configure_uploads(app, photos)
@@ -44,8 +49,11 @@ def create_app():
     from app import surface
     app.register_blueprint(surface.bp)
 
-    from app import media
-    app.register_blueprint(media.bp)
+    from app import camera
+    app.register_blueprint(camera.bp)
+
+    from app import sensor
+    app.register_blueprint(sensor.bp)
 
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')

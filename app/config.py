@@ -20,6 +20,12 @@ class Config(object):
     UPLOADED_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/uploads'
     MOTION_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/motion'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    SERIAL_TIMEOUT = 0.1
+    SERIAL_PORT = '/dev/ttyUSB0'
+    SERIAL_BAUDRATE = 115200
+    SERIAL_BYTESIZE = 8
+    SERIAL_PARITY = 'N'
+    SERIAL_STOPBITS = 1
 
 
 class DevConfig(Config):

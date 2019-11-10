@@ -5,7 +5,6 @@
 
 from app import create_app
 from app.opencv import detect_motion, vs
-from app.serial.zigbee import ser
 import argparse
 import threading
 # from gevent.pywsgi import WSGIServer
@@ -37,7 +36,5 @@ if __name__ == '__main__':
     # http_server = WSGIServer(('0.0.0.0', 404), app)
     # http_server.serve_forever()
 
-
-# release the video stream pointer & serial
+# release the video stream pointer
 vs.stop()
-ser.close()

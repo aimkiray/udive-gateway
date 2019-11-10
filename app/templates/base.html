@@ -17,6 +17,7 @@
 </head>
 
 <body>
+{% block styles %}{% endblock %}
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">UMR</a>
@@ -33,10 +34,13 @@
                 <a class="nav-link" href="{{ url_for('surface.new') }}">Photo </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('media.video') }}">Now </a>
+                <a class="nav-link" href="{{ url_for('camera.video') }}">Now </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('media.list_motion') }}">Motion </a>
+                <a class="nav-link" href="{{ url_for('camera.list_motion') }}">Motion </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('sensor.switch') }}">Control </a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -94,11 +98,11 @@
 <script>
     $(document).ready(function () {
         var getting = {
-            url: '{{ url_for('media.motion_detection') }}',
+            url: '{{ url_for('camera.motion_detection') }}',
             type: 'GET',
             success: function (data) {
                 if (data === "True") {
-                    $("#custom_warning_alert").empty().show().html('<a href="{{ url_for('media.list_motion') }}">发现UFO，点击查看</a>')
+                    $("#custom_warning_alert").empty().show().html('<a href="{{ url_for('camera.list_motion') }}">发现UFO，点击查看</a>')
                         .delay(5000).fadeOut(300);
                 }
             },
@@ -110,10 +114,11 @@
         window.setInterval(function () {
             $.ajax(getting)
         }, 5000);
+
     })
 </script>
 
-{% block js %}{% endblock %}
+{% block scripts %}{% endblock %}
 
 </body>
 </html>
