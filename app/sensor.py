@@ -4,6 +4,7 @@
 # @Author  : aimkiray
 
 from app import db, ser
+from app.models import Sensor
 
 from flask_login import login_required
 from flask import (
@@ -26,25 +27,27 @@ def switch():
 #     ser.on_send(data['message'])
 #     print("send to serial: %s" % data['message'])
 
-# 数据一共四位，分别是
+
 @bp.route('/send')
 @login_required
 def handle_send():
     send_data = None
     node = request.args.get('node')
     if node == 'lamp':
-        send_data = b'\xfe\x08\xaa\xaa\x02\x00\x01\x02\x03\x04\xff'
+        send_data = b'\xfe\x05\xaa\xaa\x02\x00\x01\xff'
     elif node == 'fan':
-        send_data = b'\xfe\x08\xaa\xaa\x02\x00\x01\x02\x03\x04\xff'
+        send_data = b'\xfe\x05\xaa\xaa\x02\x00\x01\xff'
     ser.on_send(send_data)
-    print("send to serial: %s" % str(send_data))
+    # print("send to serial: %s" % str(send_data))
     return "True"
 
 
-# Just recycle data, determine data type based on address
+# Just recycle data, determine data type based on port
 @ser.on_message()
 def handle_message(msg):
-    print("receive a message:", msg)
+    db.session.add(Sensor("temp", msg[6], msg[7]))
+    db.session.commit()
+    print("receive a message:", msg[6])
 
 
 # @ser.on_message()

@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    <style>
+        .hello {
+            display: inline-block;
+            line-height: 2;
+            vertical-align: text-top;
+            writing-mode: vertical-rl;
+            -webkit-writing-mode: vertical-rl;
+            -ms-writing-mode: tb-rl;
+            writing-mode: tb-rl;
+            layout-flow: vertical-ideographic;
+            text-align: start;
+        }
+
+        .hello-show {
+            color: #9a4c2a;
+            text-align: center;
+            padding: 5px 5px;
+            font-size: 30px;
+            width: auto;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div>
         <div style="display: table-cell;vertical-align: top; color:#B2B7F2;font-size:36px;font-family:'Times New Roman',serif;font-weight:bold;text-align:left;padding:10px 10px;line-height:100%">
@@ -9,7 +33,14 @@
             {% if current_user.is_anonymous %}
                 <b style="font-size: larger;color: black;"><span style="color:red;">／人◕ ‿‿ ◕人＼</span>和我签订契约，成为马猴烧酒吧！</b>
             {% else %}
-                <b style="font-size: larger;color: black;">遵从召唤而来, 你他娘的就是老子的Master吗？</b>
+                <div class="hello-show">
+                    <b>
+                        <span lang="ja">
+                            <span class="hello">ご注文は<br>うさぎ<br>ですか？</span>
+{#                            <span class="hello">请问您今天<br>要来点<br>兔子吗？</span>#}
+                        </span>
+                    </b>
+                </div>
             {% endif %}
         </div>
         <div style="display: table-cell; vertical-align: bottom; color:#B2B7F2;font-size:36px;font-family:'Times New Roman',serif;font-weight:bold;text-align:left;padding:10px 10px;line-height:100%">

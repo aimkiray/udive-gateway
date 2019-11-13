@@ -72,5 +72,28 @@ class Camera(db.Model):
         return '<Camera %r>' % self.title
 
 
+class Sensor(db.Model):
+    __tablename__ = 'sensor'
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    gmt_create = db.Column(db.DateTime)
+    gmt_modified = db.Column(db.DateTime)
+    sensor_type = db.Column(db.String(100))
+    sensor_data = db.Column(db.BigInteger)
+    others = db.Column(db.String(100))
+
+    def __init__(self, related_path, gmt_create=None, gmt_modified=None):
+        self.related_path = related_path
+        if gmt_create is None:
+            gmt_create = datetime.utcnow()
+        self.gmt_create = gmt_create
+        if gmt_modified is None:
+            gmt_modified = datetime.utcnow()
+        self.gmt_modified = gmt_modified
+
+    def __repr__(self):
+        return '<Sensor %r>' % self.title
+
+
 if __name__ == '__main__':
     manager.run()
