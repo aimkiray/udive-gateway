@@ -2,9 +2,6 @@
 
 {% block styles %}
     <style>
-        .switch-form {
-            padding-top: 50px;
-        }
         #div_g {
             width: 600px;
             height: 300px;
@@ -78,7 +75,7 @@
                 $.ajax({
                     url: '{{ url_for('sensor.handle_send') }}',
                     type: 'GET',
-                    data: {'node': $(this).prop('name')},
+                    data: {'node': $(this).prop('name'), 'action': isChecked},
                     success: function (data) {
                         if (data === "True") {
                         }
@@ -92,22 +89,30 @@
             });
 
             // Temperature Dynamic Update
-            var data = [];
-            data.push([new Date(), Math.random()]);
+            var temp_data = [];
+            temp_data.push([new Date(), 20]);
 
-            var g = new Dygraph(document.getElementById("div_g"), data,
+            var g = new Dygraph(document.getElementById("div_g"), temp_data,
                 {
                     drawPoints: true,
-                    valueRange: [-10, 40],
-                    labels: ['Time', 'Random']
+                    valueRange: [15, 35],
+                    labels: ['Time', 'Temperature']
                 });
             // It sucks that these things aren't objects, and we need to store state in window.
             window.intervalId = setInterval(function () {
-                var x = new Date();  // current time
-                var y = Math.random() * 10;
-                data.push([x, y]);
-                g.updateOptions({'file': data});
-            }, 1000);
+                $.ajax({
+                    url: '{{ url_for('sensor.show_message') }}',
+                    type: 'GET',
+                    success: function (msg) {
+                        if (msg.result === "success") {
+                            var x = new Date();  // current time
+                            var y = msg.data;
+                            temp_data.push([x, y]);
+                            g.updateOptions({'file': temp_data});
+                        }
+                    }
+                })
+            }, 5000);
         });
     </script>
 {% endblock %}

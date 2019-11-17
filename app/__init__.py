@@ -29,6 +29,7 @@ def create_app():
     app.config.from_object('app.config.ProdConfig')
 
     bootstrap.init_app(app)
+    db.app = app
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)

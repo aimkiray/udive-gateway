@@ -33,10 +33,17 @@ def switch():
 def handle_send():
     send_data = None
     node = request.args.get('node')
+    action = request.args.get('action')
     if node == 'lamp':
-        send_data = b'\xfe\x05\xaa\xaa\x02\x00\x01\xff'
+        if action == 'true':
+            send_data = b'\xfe\x05\xa3\x44\x03\x00\x11\xff'
+        else:
+            send_data = b'\xfe\x05\xa3\x44\x03\x00\x10\xff'
     elif node == 'fan':
-        send_data = b'\xfe\x05\xaa\xaa\x02\x00\x01\xff'
+        if action == 'true':
+            send_data = b'\xfe\x05\xa3\x45\x03\x00\x11\xff'
+        else:
+            send_data = b'\xfe\x05\xa3\x45\x03\x00\x10\xff'
     ser.on_send(send_data)
     # print("send to serial: %s" % str(send_data))
     return "True"
@@ -48,6 +55,12 @@ def handle_message(msg):
     db.session.add(Sensor("temp", msg[6], msg[7]))
     db.session.commit()
     print("receive a message:", msg[6])
+
+
+@bp.route('/read')
+def show_message():
+    temp = Sensor.query.order_by(Sensor.id.desc()).first()
+    return jsonify({'result': 'success', 'data': temp.sensor_data})
 
 
 # @ser.on_message()
