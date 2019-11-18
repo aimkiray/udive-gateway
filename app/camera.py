@@ -7,7 +7,7 @@ from app import db
 from app.models import Camera
 from app.opencv import generate, get_path, reset_path
 
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination, get_page_args
 from flask_login import login_required
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify, json, Response
@@ -58,12 +58,19 @@ def list_motion():
     q = request.args.get('q')
     if q:
         search = True
-
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-
     motions = Camera.query.all()
-    pagination = Pagination(page=page, total=len(motions), search=search, record_name='motions')
-    return render_template("camera/list_motion.html", motions=motions, pagination=pagination)
+    page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+    pagination_motions = motions[offset: offset + per_page]
+    total = len(motions)
+    pagination = Pagination(page=page, per_page=per_page, total=total,
+                            css_framework='bootstrap4', record_name='motions', search=search)
+
+    return render_template("camera/list_motion.html",
+                           motions=pagination_motions,
+                           page=page,
+                           per_page=per_page,
+                           pagination=pagination)
 
 
 @bp.route("/del_motion/<int:id>", methods=['DELETE'])

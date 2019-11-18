@@ -4,7 +4,7 @@
 # @Author  : aimkiray
 
 from app import db, ser
-from app.models import Sensor
+from app.models import Sensor, Config
 
 from flask_login import login_required
 from flask import (
@@ -17,7 +17,12 @@ bp = Blueprint('sensor', __name__)
 @bp.route('/switch')
 @login_required
 def switch():
-    return render_template('sensor.html')
+    temp_first = Sensor.query.order_by(Sensor.id.desc()).first()
+    config_list = Config.query.all()
+    # status = {}
+    # for config in config_list:
+    #     status.pop(config.sensor_type, config.status)
+    return render_template('sensor.html', temp_first=temp_first.sensor_data, config_list=config_list)
 
 
 # @socketio.on('send')
@@ -31,36 +36,82 @@ def switch():
 @bp.route('/send')
 @login_required
 def handle_send():
+    # Zigbee communication dedicated instruction
     send_data = None
+    # Node working status
+    status = None
     node = request.args.get('node')
     action = request.args.get('action')
     if node == 'lamp':
         if action == 'true':
             send_data = b'\xfe\x05\xa3\x44\x03\x00\x11\xff'
+            status = 1
         else:
             send_data = b'\xfe\x05\xa3\x44\x03\x00\x10\xff'
-    elif node == 'fan':
+            status = 0
+    elif node == 'fan0':
         if action == 'true':
             send_data = b'\xfe\x05\xa3\x45\x03\x00\x11\xff'
+            status = 1
         else:
             send_data = b'\xfe\x05\xa3\x45\x03\x00\x10\xff'
-    ser.on_send(send_data)
-    # print("send to serial: %s" % str(send_data))
+            status = 0
+    if send_data and status is not None:
+        ser.on_send(send_data)
+        config = Config.query.filter_by(sensor_type=node).first()
+        # Automatic operation is 0, and manual is 1
+        config.where = 1
+        config.status = status
+        db.session.commit()
     return "True"
 
 
 # Just recycle data, determine data type based on port
 @ser.on_message()
 def handle_message(msg):
-    db.session.add(Sensor("temp", msg[6], msg[7]))
+    now_temp = msg[6]
+    temp_config = Config.query.filter_by(sensor_type='temp').first()
+    fan0_config = Config.query.filter_by(sensor_type='fan0').first()
+    # Temperature is too high
+    if now_temp > temp_config.max_value:
+        if fan0_config.status == 0:
+            # Turn on fan0
+            ser.on_send(b'\xfe\x05\xa3\x45\x03\x00\x11\xff')
+            # Automatic operation is 0, and manual is 1
+            fan0_config.where = 0
+            fan0_config.status = 1
+    else:
+        if fan0_config.status == 1 and fan0_config.where == 0:
+            # Turn off fan0
+            ser.on_send(b'\xfe\x05\xa3\x45\x03\x00\x10\xff')
+            fan0_config.status = 0
+
+    db.session.add(Sensor("temp", now_temp, msg[7]))
     db.session.commit()
-    print("receive a message:", msg[6])
 
 
 @bp.route('/read')
+@login_required
 def show_message():
     temp = Sensor.query.order_by(Sensor.id.desc()).first()
     return jsonify({'result': 'success', 'data': temp.sensor_data})
+
+
+@bp.route('/set_value')
+@login_required
+def set_value():
+    min_value = request.args.get('min_value')
+    max_value = request.args.get('max_value')
+    # status = request.args.get('status')
+    config = Config.query.filter_by(sensor_type='temp').first()
+    if max_value > min_value:
+        config.min_value = min_value
+        config.max_value = max_value
+        # config.status = status
+        db.session.commit()
+        return "True"
+    else:
+        return "False"
 
 
 # @ser.on_message()
