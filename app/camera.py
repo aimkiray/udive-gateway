@@ -15,7 +15,6 @@ from flask import (
 
 bp = Blueprint('camera', __name__)
 
-
 @bp.route('/video')
 @login_required
 def video():

@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # Project exclude paths
-/app/static/motion/
-/app/static/uploads/
+/app/static/motion/*
+/app/static/uploads/*

@@ -13,6 +13,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_cl
 # from flask_wtf.csrf import CSRFProtect
 from app.serial import Serial
 from flask_socketio import SocketIO
+import configparser
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -23,10 +24,13 @@ ser = Serial()
 socketio = SocketIO()
 # csrf = CSRFProtect()
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object('app.config.DevConfig')
+    app.config.from_object('app.config.' + config['DEFAULT']['Env'] + 'Config')
 
     bootstrap.init_app(app)
     db.app = app

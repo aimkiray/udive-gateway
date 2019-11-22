@@ -10,7 +10,7 @@ import datetime
 import threading
 import time
 import cv2
-from flask import current_app
+import configparser
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -20,8 +20,10 @@ lock = threading.Lock()
 
 # initialize the video stream and allow the camera sensor to
 # warmup
-piCamera = current_app.config['PI_CAMERA']
-if piCamera:
+config = configparser.ConfigParser()
+config.read('config.ini')
+piCamera = config['DEFAULT']['PiCamera']
+if piCamera == 'yes':
     vs = VideoStream(usePiCamera=1).start()
 else:
     vs = VideoStream(src=0).start()
@@ -69,7 +71,7 @@ def detect_motion(frameCount):
             if motion is not None:
                 motionCount += 1
                 if motionCount > 999:
-                    motion_path = current_app.config['MOTION_PHOTOS_DEST']
+                    motion_path = config['DEFAULT']['MotionPath']
                     img_path = motion_path + timestamp.strftime("%A %d %B %Y %I:%M:%S%p") + '.jpg'
                     cv2.imwrite(img_path, image)
                     # motionFlag = True
