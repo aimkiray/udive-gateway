@@ -106,8 +106,11 @@ class Config(db.Model):
     max_value = db.Column(db.BigInteger)
     status = db.Column(db.Integer)
     others = db.Column(db.String(100))
+    disabled = db.Column(db.Integer)
+    where = db.Column(db.Integer)
 
-    def __init__(self, sensor_type, min_value=None, max_value=None, status=None, others=None, gmt_create=None, gmt_modified=None):
+    def __init__(self, sensor_type, status=None, min_value=None, max_value=None, others=None, gmt_create=None,
+                 gmt_modified=None):
         self.sensor_type = sensor_type
         self.min_value = min_value
         self.max_value = max_value
@@ -119,9 +122,6 @@ class Config(db.Model):
         if gmt_modified is None:
             gmt_modified = datetime.utcnow()
         self.gmt_modified = gmt_modified
-
-    def __repr__(self):
-        return '<Config %r>' % self.sensor_type
 
 
 if __name__ == '__main__':

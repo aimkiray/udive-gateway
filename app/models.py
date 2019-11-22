@@ -107,7 +107,8 @@ class Config(db.Model):
     disabled = db.Column(db.Integer)
     where = db.Column(db.Integer)
 
-    def __init__(self, sensor_type, status=None, min_value=None, max_value=None, others=None, gmt_create=None, gmt_modified=None):
+    def __init__(self, sensor_type, status=None, min_value=None, max_value=None, others=None, gmt_create=None,
+                 gmt_modified=None):
         self.sensor_type = sensor_type
         self.min_value = min_value
         self.max_value = max_value

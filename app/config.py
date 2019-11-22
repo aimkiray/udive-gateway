@@ -26,6 +26,7 @@ class Config(object):
     SERIAL_BYTESIZE = 8
     SERIAL_PARITY = 'N'
     SERIAL_STOPBITS = 1
+    PI_CAMERA = 0
 
 
 class DevConfig(Config):
@@ -36,6 +37,8 @@ class DevConfig(Config):
 class ProdConfig(Config):
     SECRET_KEY = '12138'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
-    UPLOADED_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/uploads'
-    MOTION_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/motion'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@10.42.0.1/umr'
+    SERIAL_PORT = '/dev/ttyAMA0'
+    UPLOADED_PHOTOS_DEST = r'/home/pi/iot-server/app/static/uploads'
+    MOTION_PHOTOS_DEST = r'/home/pi/iot-server/app/static/motion'
+    PI_CAMERA = 1

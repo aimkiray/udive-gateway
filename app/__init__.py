@@ -26,7 +26,7 @@ socketio = SocketIO()
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object('app.config.ProdConfig')
+    app.config.from_object('app.config.DevConfig')
 
     bootstrap.init_app(app)
     db.app = app

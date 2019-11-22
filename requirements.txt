@@ -1,8 +1,6 @@
-cv2
 imutils
 gevent
 alembic
-Bootstrap-Flask
 Click
 Flask
 Flask-Login
@@ -13,6 +11,8 @@ Flask-SQLAlchemy
 Flask-Uploads
 Flask-WTF
 flask-paginate
+flask_socketio
+flask_bootstrap
 inflect
 itsdangerous
 Jinja2
