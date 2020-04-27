@@ -3,11 +3,11 @@
 # @Time    : 2018/6/4
 # @Author  : aimkiray
 
-from app.forms import LoginForm, RegistrationForm, UploadForm
+from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
-from app import db, photos
+from app import db
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify, json, Response
@@ -54,30 +54,13 @@ def register():
         return redirect(url_for('surface.index'))
     form = RegistrationForm()
     if form.validate_on_submit() and form.key.data == 'awsl':
-        user = User(username=form.username.data)
+        user = User()
+        user.set_username(form.username.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('您已经过鹳狸猿认可。')
+        flash('您已通过鹳狸猿认证。')
         return redirect(url_for('surface.login'))
     else:
-        flash('您还没有经过鹳狸猿认可，不能一起玩。')
+        flash('您还没有通过鹳狸猿认证，我们不能一起玩。')
     return render_template('register.html', title='Register', form=form)
-
-
-@bp.route('/new')
-@login_required
-def new():
-    course_str = current_app.config['COURSE']
-    course_list = course_str.split(',')
-    return render_template('question/new.html', course_list=course_list)
-
-
-@bp.route('/uploads', methods=['GET', 'POST'])
-def uploads():
-    form = UploadForm()
-    if form.photo.data is not None:
-        filename = photos.save(form.photo.data)
-        return jsonify({'result': 'success', 'file_url': photos.url(filename), 'file_name': filename})
-    else:
-        return jsonify({'result': 'false'})

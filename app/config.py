@@ -14,12 +14,9 @@ class Config(object):
     DB_USER = 'umr'
     DB_PASSWORD = '12138'
     DATABASE = 'umr'
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@127.0.0.1/umr'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + DB_USER + ':' + DB_PASSWORD + '@' + DB_HOST + '/' + DATABASE
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    COURSE = 'gc,xh,cy,dl,cg,mn,sz'
-    UPLOADED_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/uploads'
-    MOTION_PHOTOS_DEST = r'/home/aimkiray/PycharmProjects/iot-server/app/static/motion'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    MOTION_PHOTOS_DEST = r'app/static/motion'
     SERIAL_TIMEOUT = 0.1
     SERIAL_PORT = '/dev/ttyUSB0'
     SERIAL_BAUDRATE = 115200
@@ -39,6 +36,5 @@ class ProdConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://umr:12138@10.42.0.1/umr'
     SERIAL_PORT = '/dev/ttyAMA0'
-    UPLOADED_PHOTOS_DEST = r'/home/pi/iot-server/app/static/uploads'
-    MOTION_PHOTOS_DEST = r'/home/pi/iot-server/app/static/motion'
+    MOTION_PHOTOS_DEST = r'app/static/motion'
     PI_CAMERA = 1

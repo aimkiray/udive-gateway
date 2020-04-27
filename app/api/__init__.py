@@ -7,4 +7,4 @@ from flask import Blueprint
 
 bp = Blueprint('api', __name__)
 
-from app.api import question, errors, tokens
+from app.api import errors, tokens

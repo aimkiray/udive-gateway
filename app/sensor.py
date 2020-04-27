@@ -42,6 +42,8 @@ def handle_send():
     status = None
     node = request.args.get('node')
     action = request.args.get('action')
+    # TODO save to database
+    # Prepare command
     if node == 'lamp':
         if action == 'true':
             send_data = b'\xfe\x05\xa3\x44\x03\x00\x11\xff'
@@ -56,6 +58,7 @@ def handle_send():
         else:
             send_data = b'\xfe\x05\xa3\x45\x03\x00\x10\xff'
             status = 0
+    # Send command via serial
     if send_data and status is not None:
         ser.on_send(send_data)
         config = Config.query.filter_by(sensor_type=node).first()

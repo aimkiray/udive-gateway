@@ -3,7 +3,6 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, EqualTo
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from app.models import User
-from app import photos
 
 
 class LoginForm(FlaskForm):
@@ -25,10 +24,3 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('根据相关法律法规，该用户名禁止使用~')
-
-
-class UploadForm(FlaskForm):
-    photo = FileField(validators=[
-        FileAllowed(photos, u'只能上传图片！'),
-        FileRequired(u'文件未选择！')])
-    submit = SubmitField(u'上传')

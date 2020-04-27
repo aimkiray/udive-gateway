@@ -15,8 +15,10 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(30))
-    last_edit = db.Column(db.String(30))
-    gates = db.relationship('Gate', backref='author', lazy='dynamic')
+    others = db.Column(db.String(30))
+
+    def set_username(self, username):
+        self.username = username
 
     def set_password(self, password):
         self.password = password
@@ -26,24 +28,6 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
-
-
-class Gate(db.Model):
-    __tablename__ = 'gate'
-
-    id = db.Column(db.BigInteger, primary_key=True)
-    gmt_create = db.Column(db.DateTime)
-    gmt_modified = db.Column(db.DateTime)
-    course = db.Column(db.String(100))
-    topic = db.Column(db.String(255))
-    answer = db.Column(db.String(255))
-    topic_raw = db.Column(db.Text)
-    answer_raw = db.Column(db.Text)
-    remark = db.Column(db.String(255))
-    related_pic = db.Column(db.String(255))
-    is_deleted = db.Column(db.Integer)
-    frequency = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class Camera(db.Model):
