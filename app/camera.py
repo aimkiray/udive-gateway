@@ -3,9 +3,8 @@
 # @Time    : 2019/11/6
 # @Author  : aimkiray
 
-from app import db
+from app import db, cv
 from app.models import Camera
-from app.opencv import generate, get_path, reset_path
 
 from flask_paginate import Pagination, get_page_args
 from flask_login import login_required
@@ -14,6 +13,7 @@ from flask import (
 )
 
 bp = Blueprint('camera', __name__)
+
 
 @bp.route('/video')
 @login_required
@@ -26,19 +26,19 @@ def video():
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
-    return Response(generate(),
+    return Response(cv.generate(),
                     mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
 @bp.route("/motion_detection")
 @login_required
 def motion_detection():
-    path = get_path()
+    path = cv.get_path()
     if path is not None:
         path = path.split('app')[1]
         db.session.add(Camera(path))
         db.session.commit()
-        reset_path()
+        cv.reset_path()
         return "True"
     else:
         return "False"
@@ -47,7 +47,7 @@ def motion_detection():
 @bp.route("/reset_motion")
 @login_required
 def reset_motion():
-    reset_path()
+    cv.reset_path()
 
 
 @bp.route("/list_motion")
