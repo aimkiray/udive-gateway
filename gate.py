@@ -3,8 +3,7 @@
 # @Time    : 2018/6/4
 # @Author  : aimkiray
 
-from app import create_app
-from app.opencv import detect_motion, vs
+from app import create_app, cv
 import argparse
 import threading
 # from gevent.pywsgi import WSGIServer
@@ -24,7 +23,7 @@ if __name__ == '__main__':
     args = vars(ap.parse_args())
 
     # start a thread that will perform motion detection
-    t = threading.Thread(target=detect_motion, args=(
+    t = threading.Thread(target=cv.detect_motion, args=(
         args["frame_count"],))
     t.daemon = True
     t.start()
@@ -37,4 +36,4 @@ if __name__ == '__main__':
     # http_server.serve_forever()
 
 # release the video stream pointer
-vs.stop()
+cv.stop()
