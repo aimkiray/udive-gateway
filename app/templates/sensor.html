@@ -5,7 +5,6 @@
         #div_g {
             width: 600px;
             height: 300px;
-            padding: auto;
         }
     </style>
 {% endblock %}
@@ -17,15 +16,6 @@
             <div id="div_g"></div>
         </div>
     </div>
-
-    {#    <div class="custom-control custom-switch">#}
-    {#        <input type="checkbox" class="custom-control-input" id="lampSwitch" name="lamp">#}
-    {#        <label class="custom-control-label" for="lampSwitch">灯的开关</label>#}
-    {#    </div>#}
-    {#    <div class="custom-control custom-switch">#}
-    {#        <input type="checkbox" class="custom-control-input" id="fanSwitch" name="fan">#}
-    {#        <label class="custom-control-label" for="fanSwitch">空调的开关</label>#}
-    {#    </div>#}
 
     <div style="font-size: large;padding: 30px 0 10px 0;">开关</div>
 
@@ -41,36 +31,6 @@
                 </div>
             </div>
         {% endfor %}
-        {#        <div class="col">#}
-        {#            <div class="custom-control custom-toggle my-2">#}
-        {#                <input type="checkbox" id="lampSwitch" name="lamp" class="custom-control-input">#}
-        {#                <label class="custom-control-label" for="lampSwitch">厕所的灯</label>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="col">#}
-        {#            <div class="custom-control custom-toggle my-2">#}
-        {#                <input type="checkbox" id="fanSwitch" name="fan" class="custom-control-input">#}
-        {#                <label class="custom-control-label" for="fanSwitch">抽油烟机0</label>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="col">#}
-        {#            <div class="custom-control custom-toggle my-2">#}
-        {#                <input type="checkbox" id="lampSwitch1" name="lamp1" class="custom-control-input" disabled>#}
-        {#                <label class="custom-control-label" for="lampSwitch1">抽油烟机1</label>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="col">#}
-        {#            <div class="custom-control custom-toggle my-2">#}
-        {#                <input type="checkbox" id="lampSwitch2" name="lamp2" class="custom-control-input" disabled>#}
-        {#                <label class="custom-control-label" for="lampSwitch2">抽油烟机2</label>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="col">#}
-        {#            <div class="custom-control custom-toggle my-2">#}
-        {#                <input type="checkbox" id="lampSwitch3" name="lamp3" class="custom-control-input" disabled>#}
-        {#                <label class="custom-control-label" for="lampSwitch3">抽油烟机3</label>#}
-        {#            </div>#}
-        {#        </div>#}
     </div>
 
     <div style="font-size: large;padding: 30px 0 10px 0;">设定</div>
@@ -102,8 +62,8 @@
         $(document).ready(function () {
             
             $("#set_value").click(function () {
-                var max_value = $("#max_value").prop('value');
-                var min_value = $("#min_value").prop('value');
+                const max_value = $("#max_value").prop('value');
+                const min_value = $("#min_value").prop('value');
                 $.ajax({
                     url: '{{ url_for('sensor.set_value') }}',
                     type: 'GET',
@@ -122,7 +82,7 @@
             });
 
             $(":checkbox", this).click(function () {
-                var isChecked = $(this).prop('checked');
+                const isChecked = $(this).prop('checked');
                 $.ajax({
                     url: '{{ url_for('sensor.handle_send') }}',
                     type: 'GET',
@@ -140,10 +100,10 @@
             });
 
             // Temperature Dynamic Update
-            var temp_data = [];
+            let temp_data = [];
             temp_data.push([new Date(), {{ temp_first }}]);
 
-            var g = new Dygraph(document.getElementById("div_g"), temp_data,
+            const g = new Dygraph(document.getElementById("div_g"), temp_data,
                 {
                     drawPoints: true,
                     valueRange: [15, 35],

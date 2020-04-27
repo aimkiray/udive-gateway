@@ -16,6 +16,7 @@ flask_bootstrap
 inflect
 itsdangerous
 Jinja2
+bootstrap-flask
 Mako
 MarkupSafe
 PyMySQL
@@ -28,3 +29,5 @@ tornado
 Werkzeug
 WTForms
 pyserial
+opencv-python
+numpy
